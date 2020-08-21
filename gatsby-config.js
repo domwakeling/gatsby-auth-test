@@ -1,5 +1,5 @@
 // this allows emulations of netlify-lambda in local development
-const { createProxyMiddleware } = require('http-proxy-middleware')
+const { createProxyMiddleware } = require("http-proxy-middleware")
 
 module.exports = {
   siteMetadata: {
@@ -40,9 +40,9 @@ module.exports = {
       createProxyMiddleware({
         target: "http://localhost:9000",
         pathRewrite: {
-          "/.netlify/functions/": ""
-        }
+          "/.netlify/functions/": "",
+        },
       })
     )
-  }
+  },
 }
