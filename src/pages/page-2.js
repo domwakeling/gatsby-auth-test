@@ -11,7 +11,6 @@ import Bookings from "../components/bookings"
 const myHandler = e => {
   e.preventDefault()
   console.log("Hi there")
-  console.log(process.env.GATSBY_MONGODB_URI)
   fetch("/.netlify/functions/hello")
     .then(response => response.json())
     .then(console.log)

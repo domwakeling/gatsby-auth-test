@@ -5,9 +5,6 @@ import { MongoClient } from "mongodb"
 export async function handler(event, context) {
   const forDay = event.path.split("/")[2] || ""
 
-  console.log("NODE VERSION", process.env.NODE_VERSION)
-  console.log("NETLIFT", process.env.NETLIFY)
-
   if (forDay == "") {
     return {
       statusCode: 400,
@@ -15,7 +12,9 @@ export async function handler(event, context) {
     }
   }
 
-  const uri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017"
+  const uri =
+    process.env.MONGODB_URI ||
+    "mongodb://user:nextjsauth2238@ds241408.mlab.com:41408/nextjsauth" //"mongodb://127.0.0.1:27017"
   const dbname = process.env.DB_NAME || "nextjsauth"
   console.log("MONGODB_URI:", uri)
 

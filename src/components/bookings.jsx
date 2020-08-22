@@ -21,13 +21,12 @@ const fetcher = url => fetch(url).then(r => r.json())
 
 const Bookings = () => {
   // const ds = getFriday()
-  const ds = ["21072020", ""]
+  const ds = ["21072020", "21 August 2020"]
   const { data, error } = useSWR(
     `/.netlify/functions/getbookings/${ds[0]}`,
     fetcher,
     { refreshInterval: 1000 }
   )
-  console.log(data)
 
   if (error) return <div>failed to load</div>
 
@@ -43,6 +42,8 @@ const Bookings = () => {
       </div>
     )
   }
+
+  console.log("Data:", data)
 
   const idxs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
   return (
