@@ -12,9 +12,7 @@ export async function handler(event, context) {
     }
   }
 
-  const uri =
-    process.env.MONGODB_URI ||
-    "mongodb://user:nextjsauth2238@ds241408.mlab.com:41408/nextjsauth" //"mongodb://127.0.0.1:27017"
+  const uri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017"
   const dbname = process.env.DB_NAME || "nextjsauth"
   console.log("MONGODB_URI:", uri)
 
@@ -25,6 +23,7 @@ export async function handler(event, context) {
     const bookings = await db.collection("bookings").findOne({
       forWeek: forDay,
     })
+    console.log(bookings);
     return {
       statusCode: 200,
       body: JSON.stringify({ data: bookings }),
