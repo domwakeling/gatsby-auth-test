@@ -1,10 +1,6 @@
 /*  eslint-disable no-unused-vars */
-// modern JS style - encouraged
 
 import { MongoClient } from "mongodb"
-
-const secrets =
-  process.env.CONTEXT == "production" ? {} : require("../.env.prod")
 
 export async function handler(event, context) {
   const forDay = event.path.split("/")[2] || ""
@@ -16,8 +12,8 @@ export async function handler(event, context) {
     }
   }
 
-  const uri = process.env.GATSBY_MONGODB_URI || secrets.GATSBY_MONGODB_URI
-  const dbname = process.env.GATSBY_DB_NAME || secrets.GATSBY_DB_NAME
+  const uri = process.env.GATSBY_MONGODB_URI || "mongodb://127.0.0.1:27017"
+  const dbname = process.env.GATSBY_DB_NAME || "nextjsauth"
   console.log(uri)
 
   try {
@@ -37,21 +33,4 @@ export async function handler(event, context) {
       body: JSON.stringify({ message: e.message }),
     }
   }
-
-  //   return {
-  //     statusCode: 200,
-  //     body: JSON.stringify({ message: event.path.split("/")[2], message2: "hi" }),
-  //   }
 }
-
-// handler.get(async (req, res) => {
-//     const forFriday = req.query.week;
-
-//     const bookings = await req.db
-//         .collection('bookings')
-//         .findOne({
-//             forWeek: forFriday,
-//         });
-
-//     res.send(bookings ? bookings.racers : []);
-// });
