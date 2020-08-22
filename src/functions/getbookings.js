@@ -5,6 +5,8 @@ import { MongoClient } from "mongodb"
 export async function handler(event, context) {
   const forDay = event.path.split("/")[2] || ""
 
+  console.log(context)
+
   if (forDay == "") {
     return {
       statusCode: 400,
@@ -12,8 +14,8 @@ export async function handler(event, context) {
     }
   }
 
-  const uri = process.env.GATSBY_MONGODB_URI || "mongodb://127.0.0.1:27017"
-  const dbname = process.env.GATSBY_DB_NAME || "nextjsauth"
+  const uri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017"
+  const dbname = process.env.DB_NAME || "nextjsauth"
   console.log(uri)
 
   try {
