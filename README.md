@@ -1,99 +1,99 @@
-<!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
-<p align="center">
-  <a href="https://www.gatsbyjs.org">
-    <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
-  </a>
-</p>
-<h1 align="center">
-  Gatsby's default starter
-</h1>
+# Gatsby Auth Test
 
-Kick off your project with this default boilerplate. This starter ships with the main Gatsby configuration files you might need to get up and running blazing fast with the blazing fast app generator for React.
+*(not just auth, other things as well)*
 
-_Have another more specific idea? You may want to check out our vibrant collection of [official and community-created starters](https://www.gatsbyjs.org/docs/gatsby-starters/)._
+![Netlify](https://img.shields.io/netlify/3bfed8ff-cbb4-4a8c-8be5-b215ad2667a8)
 
-## 🚀 Quick start
+Trial to see whether we can add some form of sign-in/auth to Gatsby, which would enable getting
+rhe Bowles [Friday training booking app](https://bowles-friday-training.vercel.app/) as part of
+the overall Bowles website, rather than standalone.
 
-1.  **Create a Gatsby site.**
+## Progress:
+* set up a basic Gatsby site using `gatsby-default-starter`
+* added `netlify-lambda` to provide access to Netlify Functions
+* tested using a function (`getbookings`) and component (`bookings.jsx`) to put a call into a
+database, render a component with that data, and update on a regular basis (there are limits
+to the free tier on Netlify Functions, but they allow 125,000 requests which is one every 20 
+seconds, so for the purposes of this app it should be fine - so long as no-one leaves a tab 
+open for an hours at a time; can always add a note on the page asking them to not leave it 
+open ...)
 
-    Use the Gatsby CLI to create a new site, specifying the default starter.
+## Next Up:
+Now that we've worked out how to access database for data and render updates, the next part of the
+ puzzle is to look at authentication. The strategy in the round is (I think):
+* user logs in by entering email and password
+* client hashes the password and sends together with email to a verification end-point
+* end-point verifies and returns (I think) (a) a JWT which is stored as a cookie, and (b) the 
+user _id which is stored in some local context-provider (Redux feels like overkill, React Context
+API maybe)
+* whilst the user _id is stored it can be used locally to inform colour of racers ...
+* and the JWT can be sent with any requests to other end-points
+* if a user returns to the app and a JWT cookie is stored, the app automatically tries to recover
+the user _id
 
-    ```shell
-    # create a new Gatsby site using the default starter
-    gatsby new my-default-starter https://github.com/gatsbyjs/gatsby-starter-default
-    ```
+Somewhere  we will also need to look at XSS (cross-site scripting) concerns and what the mitigation
+strategies are; the end-use we're looking at isn't massively exposed, but still should try to 
+provide a semi-decent experience and look to understand how to implement best-practice ...
+- - -
 
-1.  **Start developing.**
+## Notes
 
-    Navigate into your new site’s directory and start it up.
+*Notes and key information as to what changes will need to be implemented in the main Bowles site
+in order to successfully implement these patterns ...*
 
-    ```shell
-    cd my-default-starter/
-    gatsby develop
-    ```
+### Netlify Lambda
+* add dependencies, `npm install -D http-proxy-middleware netlify-lambda npm-run-all` (these allow 
+testing using functions)
+* change the scripts in `package.json` (any other scripts, such as `format` or `clean`, can be left):
+```
+"develop": "gatsby develop",
+"build": "gatsby build && netlify-lambda build src/functions",
+"build:app": "gatsby build",
+"build:lambda": "netlify lambda-build src/functions",
+"start": "run-p start:**",
+"start:app": "npm run develop",
+"start:lambda": "netlify-lambda serve src/functions"
+```
+* add a `netlify.toml` file in root:
+```
+[build]
+  command = "npm run build"
+  functions = "functions"
+  publish = "public"
+```
+* proxy emulated functions by editing `gatsby-config.js`:
+```
+// at the top:
+const { createProxyMiddleware } = require("http-proxy-middleware")
 
-1.  **Open the source code and start editing!**
+// add to module.exports:
+module.exports = {
+  ...
+  developMiddleware: app => {
+    app.use(
+      "/.netlify/functions/",
+      createProxyMiddleware({
+        target: "http://localhost:9000",
+        pathRewrite: {
+          "/.netlify/functions/": "",
+        },
+      })
+    )
+  },
+  ...
+```
+* add functions in a new `src/functions` folder
 
-    Your site is now running at `http://localhost:8000`!
-
-    _Note: You'll also see a second link: _`http://localhost:8000/___graphql`_. This is a tool you can use to experiment with querying your data. Learn more about using this tool in the [Gatsby tutorial](https://www.gatsbyjs.org/tutorial/part-five/#introducing-graphiql)._
-
-    Open the `my-default-starter` directory in your code editor of choice and edit `src/pages/index.js`. Save your changes and the browser will update in real time!
-
-## 🧐 What's inside?
-
-A quick look at the top-level files and directories you'll see in a Gatsby project.
-
-    .
-    ├── node_modules
-    ├── src
-    ├── .gitignore
-    ├── .prettierrc
-    ├── gatsby-browser.js
-    ├── gatsby-config.js
-    ├── gatsby-node.js
-    ├── gatsby-ssr.js
-    ├── LICENSE
-    ├── package-lock.json
-    ├── package.json
-    └── README.md
-
-1.  **`/node_modules`**: This directory contains all of the modules of code that your project depends on (npm packages) are automatically installed.
-
-2.  **`/src`**: This directory will contain all of the code related to what you will see on the front-end of your site (what you see in the browser) such as your site header or a page template. `src` is a convention for “source code”.
-
-3.  **`.gitignore`**: This file tells git which files it should not track / not maintain a version history for.
-
-4.  **`.prettierrc`**: This is a configuration file for [Prettier](https://prettier.io/). Prettier is a tool to help keep the formatting of your code consistent.
-
-5.  **`gatsby-browser.js`**: This file is where Gatsby expects to find any usage of the [Gatsby browser APIs](https://www.gatsbyjs.org/docs/browser-apis/) (if any). These allow customization/extension of default Gatsby settings affecting the browser.
-
-6.  **`gatsby-config.js`**: This is the main configuration file for a Gatsby site. This is where you can specify information about your site (metadata) like the site title and description, which Gatsby plugins you’d like to include, etc. (Check out the [config docs](https://www.gatsbyjs.org/docs/gatsby-config/) for more detail).
-
-7.  **`gatsby-node.js`**: This file is where Gatsby expects to find any usage of the [Gatsby Node APIs](https://www.gatsbyjs.org/docs/node-apis/) (if any). These allow customization/extension of default Gatsby settings affecting pieces of the site build process.
-
-8.  **`gatsby-ssr.js`**: This file is where Gatsby expects to find any usage of the [Gatsby server-side rendering APIs](https://www.gatsbyjs.org/docs/ssr-apis/) (if any). These allow customization of default Gatsby settings affecting server-side rendering.
-
-9.  **`LICENSE`**: This Gatsby starter is licensed under the 0BSD license. This means that you can see this file as a placeholder and replace it with your own license.
-
-10. **`package-lock.json`** (See `package.json` below, first). This is an automatically generated file based on the exact versions of your npm dependencies that were installed for your project. **(You won’t change this file directly).**
-
-11. **`package.json`**: A manifest file for Node.js projects, which includes things like metadata (the project’s name, author, etc). This manifest is how npm knows which packages to install for your project.
-
-12. **`README.md`**: A text file containing useful reference information about your project.
-
-## 🎓 Learning Gatsby
-
-Looking for more guidance? Full documentation for Gatsby lives [on the website](https://www.gatsbyjs.org/). Here are some places to start:
-
-- **For most developers, we recommend starting with our [in-depth tutorial for creating a site with Gatsby](https://www.gatsbyjs.org/tutorial/).** It starts with zero assumptions about your level of ability and walks through every step of the process.
-
-- **To dive straight into code samples, head [to our documentation](https://www.gatsbyjs.org/docs/).** In particular, check out the _Guides_, _API Reference_, and _Advanced Tutorials_ sections in the sidebar.
-
-## 💫 Deploy
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/gatsbyjs/gatsby-starter-default)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/gatsbyjs/gatsby-starter-default)
-
-<!-- AUTO-GENERATED-CONTENT:END -->
+### Environment Variables & Netlify Functions (Development)
+There seems to be no sane way to get `netlify-lambda` to access `process.env` in development
+(it's absoutely fine in production). This apparently leaves us with options to:
+* add variables to the `netlify.toml` file; not happy with this since I'm using GitHub to deploy 
+to Netlify
+* use a test and static replace in the server code, with either a mock or an alternative (non-production) setting; something like:
+```
+const url = process.env.MONGODB_URL || "some_string"
+```
+The main thing that I need to test at this stage is MongoDB access, and at the moment I'm electing 
+to simply run a local instance of `mongod` rather than 'sacrifice' a public instance by revealing 
+user/password information on GitHub. This may be re-thought when it comes to the other secrets 
+(which are pretty much entirely to do with gmail and sending password-recovery emails).

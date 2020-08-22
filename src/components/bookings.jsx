@@ -50,6 +50,7 @@ const Bookings = () => {
     <div>
       <h2>
         Bookings for
+        {' '}
         {ds[1]}
       </h2>
       <br />
