@@ -3,13 +3,14 @@
 import { MongoClient } from "mongodb"
 
 export async function handler(event, context) {
-  const forDay = event.path.split("/").pop() || ""
-  console.log("looking for day", forDay)
-
-  if (forDay == "") {
+  let forDay = ""
+  try {
+    forDay = event.path.match(/\/getbookings\/?(\d{8})$/)[1]
+    console.log("looking for day", forDay)
+  } catch {
     return {
       statusCode: 400,
-      body: JSON.stringify({ message: "no date provided" }),
+      body: JSON.stringify({ message: "incorrect request format" }),
     }
   }
 

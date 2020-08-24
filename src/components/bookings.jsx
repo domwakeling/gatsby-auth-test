@@ -21,7 +21,7 @@ const fetcher = url => fetch(url).then(r => r.json())
 
 const Bookings = () => {
   // const ds = getFriday()
-  const ds = ["21072020", "21 August 2020"]
+  const ds = ["28082020", "28 August 2020"]
   const { data, error } = useSWR(
     `/.netlify/functions/getbookings/${ds[0]}`,
     fetcher,
@@ -48,11 +48,7 @@ const Bookings = () => {
   const idxs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
   return (
     <div>
-      <h2>
-        Bookings for
-        {' '}
-        {ds[1]}
-      </h2>
+      <h2>Bookings for {ds[1]}</h2>
       <br />
       <div className="racerlist">
         {idxs.map(i =>
