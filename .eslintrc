@@ -12,6 +12,7 @@
     "fetch": true,
     "console": true,
     "process": true,
-    "require": true
+    "require": true,
+    "document": true
   }
 }

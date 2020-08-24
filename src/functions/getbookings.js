@@ -3,6 +3,7 @@
 import { MongoClient } from "mongodb"
 
 export async function handler(event, context) {
+  // parse path to get required day as DDMMYYYY, return error if not found
   let forDay = ""
   try {
     forDay = event.path.match(/\/getbookings\/?(\d{8})$/)[1]
@@ -14,13 +15,13 @@ export async function handler(event, context) {
     }
   }
 
+  // connect to DB
   const uri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017"
   const dbname = process.env.DB_NAME || "nextjsauth"
-  console.log("MONGODB_URI:", uri)
-
-  //   try {
   const client = new MongoClient(uri)
   await client.connect()
+
+  // retrieve bookings information with error catching
   const db = client.db(dbname)
   return db
     .collection("bookings")
@@ -28,6 +29,7 @@ export async function handler(event, context) {
       forWeek: forDay,
     })
     .then(data => {
+      // TODO: consider send back just the racers list ...
       if (data) {
         console.log(data)
         return {
@@ -35,6 +37,7 @@ export async function handler(event, context) {
           body: JSON.stringify({ data: data }),
         }
       } else {
+        // TODO: this may be more appropriate as an empty array?
         return {
           statusCode: 400,
           body: JSON.stringify({ message: "data not found" }),
