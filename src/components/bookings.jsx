@@ -43,8 +43,6 @@ const Bookings = () => {
     )
   }
 
-  console.log("Data:", data)
-
   const idxs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
   return (
     <div>
@@ -52,11 +50,11 @@ const Bookings = () => {
       <br />
       <div className="racerlist">
         {idxs.map(i =>
-          data && data.data && data.data.racers.length > i ? (
+          data && data.racers && data.racers.length > i ? (
             <Racer
               key={i}
               tabNum={i}
-              name={data.data.racers[i].name}
+              name={data.racers[i].name}
               status="normal"
             />
           ) : (

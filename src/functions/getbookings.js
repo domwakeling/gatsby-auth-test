@@ -7,7 +7,6 @@ export async function handler(event, context) {
   let forDay = ""
   try {
     forDay = event.path.match(/\/getbookings\/?(\d{8})$/)[1]
-    console.log("looking for day", forDay)
   } catch {
     return {
       statusCode: 400,
@@ -29,18 +28,17 @@ export async function handler(event, context) {
       forWeek: forDay,
     })
     .then(data => {
-      // TODO: consider send back just the racers list ...
+      // if data found, return it
       if (data) {
-        console.log(data)
         return {
           statusCode: 200,
-          body: JSON.stringify({ data: data }),
+          body: JSON.stringify({ racers: data.racers }),
         }
       } else {
-        // TODO: this may be more appropriate as an empty array?
+        // data found but not an error => noone signed up yet, return empty racers array
         return {
-          statusCode: 400,
-          body: JSON.stringify({ message: "data not found" }),
+          statusCode: 200,
+          body: JSON.stringify({ racers: [] }),
         }
       }
     })
@@ -50,18 +48,4 @@ export async function handler(event, context) {
         body: JSON.stringify({ message: err.message }),
       }
     })
-  // const bookings = await db.collection("bookings").findOne({
-  //   forWeek: forDay,
-  // })
-  // console.log(bookings);
-  // return {
-  //   statusCode: 200,
-  //   body: JSON.stringify({ data: bookings }),
-  // }
-  //   } catch (e) {
-  //     return {
-  //       statusCode: 400,
-  //       body: JSON.stringify({ message: e.message }),
-  //     }
-  //   }
 }
