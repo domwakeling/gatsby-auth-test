@@ -13,6 +13,8 @@
     "console": true,
     "process": true,
     "require": true,
-    "document": true
+    "document": true,
+    "setTimeout": true,
+    "clearTimeout": true
   }
 }

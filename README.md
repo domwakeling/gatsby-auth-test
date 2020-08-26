@@ -18,25 +18,31 @@ the overall Bowles website, rather than standalone.
   seconds, so for the purposes of this app it should be fine - so long as no-one leaves a tab
   open for an hours at a time; can always add a note on the page asking them to not leave it
   open ...)
+- tested writing cookies (`cookie_test` and `cookie_read_test`)
+- added logic and endpoints to create an account (`newuser`) and log in a user (`login`); both write
+  a jwt to cookies and set 'user' and 'mode' hooks at the page-level, using some common logic which
+  is in `src/lib/token.js`
+- added logic so that when a user goes to the booking page and isn't logged in, app will check with
+  an endpoint (`polltoken`) whether (a) there is a jwt in cookies, (b) whether that jwt is valid
+  (signed and   in-date) and (c) whether an id retrieved from the validated jwt is itself valid; if
+  yes to all three, will auto-log in the user
+- also read some more on the `swr` package and believe I can set a much longer refresh period in the
+  `bookings.jsx` component but then use the `swr/mutate` method in different components to trigger
+  a 'signal' to refresh the data (when a user tries to add/remove a racer)
 
 ## Next Up:
 
-Now that we've worked out how to access database for data and render updates, the next part of the
-puzzle is to look at authentication. The strategy in the round is (I think):
+At this point I *think* we're on the home straight; it needs some more testing, but looks as though
+the auth system is working and although I need to re-write all the API for storing/changing booking
+info this is all work I can adapt.
 
-- user logs in by entering email and password
-- client hashes the password and sends together with email to a verification end-point
-- end-point verifies and returns (I think) (a) a JWT which is stored as a cookie, and (b) the
-  user \_id which is stored in some local context-provider (Redux feels like overkill, React Context
-  API maybe)
-- whilst the user \_id is stored it can be used locally to inform colour of racers ...
-- and the JWT can be sent with any requests to other end-points
-- if a user returns to the app and a JWT cookie is stored, the app automatically tries to recover
-  the user \_id
+So the list is:
 
-Somewhere we will also need to look at XSS (cross-site scripting) concerns and what the mitigation
-strategies are; the end-use we're looking at isn't massively exposed, but still should try to
-provide a semi-decent experience and look to understand how to implement best-practice ...
+- check whether the implementation of JWTs and cookies is meeting recommendations for security,
+  protecting against XSS attacks etc
+- implement the bookings system
+- note re: above; I think it's going to be better to have Tuesday/Friday bookings as two pages
+  (from a user experience at least) to avoid complication over which day is being booked for
 
 ---
 
@@ -112,3 +118,11 @@ The main thing that I need to test at this stage is MongoDB access, and at the m
 to simply run a local instance of `mongod` rather than 'sacrifice' a public instance by revealing
 user/password information on GitHub. This may be re-thought when it comes to the other secrets
 (which are pretty much entirely to do with gmail and sending password-recovery emails).
+
+### bcrypt vs bcryptjs
+
+Not entirely sure what happened (I could have sworn that I've user `bcrypt` before in npm) but when
+I tried it threw a **HUUUGE** list of errors and warnings at me; have therefore decided to go the
+easy route and instead use `bcryptjs` which is an entirely-JS implementation. Apparently it's not
+as fast/efficient, but frankly I don't have anything like the throughput to have to worry about
+speed so the convenience wins out every time. 

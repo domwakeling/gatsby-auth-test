@@ -17,7 +17,7 @@ export async function handler(event, context) {
   // connect to DB
   const uri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017"
   const dbname = process.env.DB_NAME || "nextjsauth"
-  const client = new MongoClient(uri)
+  const client = new MongoClient(uri, { useUnifiedTopology: true })
   await client.connect()
 
   // retrieve bookings information with error catching
@@ -47,5 +47,8 @@ export async function handler(event, context) {
         statusCode: 400,
         body: JSON.stringify({ message: err.message }),
       }
+    })
+    .finally(() => {
+      client.close()
     })
 }

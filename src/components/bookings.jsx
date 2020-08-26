@@ -22,10 +22,12 @@ const fetcher = url => fetch(url).then(r => r.json())
 const Bookings = () => {
   // const ds = getFriday()
   const ds = ["28082020", "28 August 2020"]
+  // update the booking data every minute; code elsewhere to trigger a refresh when user tries
+  // to change their own booking data
   const { data, error } = useSWR(
     `/.netlify/functions/getbookings/${ds[0]}`,
     fetcher,
-    { refreshInterval: 1000 }
+    { refreshInterval: 60000 }
   )
 
   if (error) return <div>failed to load</div>

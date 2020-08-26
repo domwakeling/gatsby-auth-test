@@ -1,20 +1,16 @@
 /* eslint-disable no-console */
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "gatsby"
+
+import { toast } from "../components/toast"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-// import Racer from "../components/racer"
 import Bookings from "../components/bookings"
 
 const myHandler = e => {
   e.preventDefault()
-  console.log("Hi there")
-  console.log(document.getElementById("email"))
-  //   fetch("/.netlify/functions/hello")
-  //     .then(response => response.json())
-  //     .then(console.log)
 }
 
 const modes = {
@@ -29,6 +25,21 @@ const SecondPage = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [secret, setSecret] = useState("")
+
+useEffect(() => {
+    async function fetchData() {
+        const res = await fetch("/.netlify/functions/polltoken")
+        if (res.status == 200) {
+            const data = await res.json()
+            setUser(data.id)
+        }
+    }
+    if (!user) {
+        // send to an endpoint to see whether there's a token embedded ...
+        fetchData()   
+        
+    }
+}, [user])
 
   const handleEmail = e => {
     e.preventDefault()
@@ -45,12 +56,103 @@ const SecondPage = () => {
     setSecret(e.target.value)
   }
 
-  const submitLogin = e => {
+  const submitLogin = async e => {
     e.preventDefault()
+    // check a password has been provided
+    if (!password) {
+      toast.notify("You must enter a password", {
+        type: "error",
+        title: "Error",
+        duration: 2,
+      })
+      return
+    }
+    // create the request body
+    const body = {
+      email,
+      password,
+    }
+    // try to log in
+    const res = await fetch("/.netlify/functions/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+    const status = res.status
+    const data = await res.json()
+    // if successfui ...
+    if (status === 200) {
+      toast.notify("Welcome back", {
+        type: "success",
+        title: "Success",
+        duration: 2,
+      })
+      setUser(data.user_id)
+      setMode(modes.SIGNED_IN)
+      setEmail("")
+      setPassword("")
+      setSecret("")
+    } else {
+      // not successful, notify using information from API
+      toast.notify(data.message, {
+        type: "error",
+        title: "Error",
+      })
+    }
   }
 
-  const submitSignUp = e => {
+  const submitSignUp = async e => {
     e.preventDefault()
+    // check secret is correct
+    if (secret !== process.env.GATSBY_CLUB_SECRET) {
+      toast.notify("The secret you have entered is incorrect", {
+        type: "error",
+        title: "Error",
+        duration: 2,
+      })
+      return
+    }
+    // check a password has been provided
+    if (!password) {
+      toast.notify("You must enter a password", {
+        type: "error",
+        title: "Error",
+        duration: 2,
+      })
+      return
+    }
+    // create the request body
+    const body = {
+      email,
+      password,
+    }
+    // try to create an account
+    const res = await fetch("/.netlify/functions/newuser", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+    const status = res.status
+    const data = await res.json()
+    // if successfui ...
+    if (status === 201) {
+      toast.notify("Your account is being set up", {
+        type: "success",
+        title: "Success",
+        duration: 2,
+      })
+      setUser(data.user_id)
+      setMode(modes.SIGNED_IN)
+      setEmail("")
+      setPassword("")
+      setSecret("")
+    } else {
+      // not successful, notify using information from API
+      toast.notify(data.message, {
+        type: "error",
+        title: "Error",
+      })
+    }
   }
 
   const changeToSignUp = e => {
@@ -63,10 +165,6 @@ const SecondPage = () => {
     setMode(modes.LOGGING_IN)
   }
 
-  // this just to stop stupid build errors
-  if (user != null) setUser(null)
-  if (mode == null) setMode(modes.LOGGING_IN)
-
   return (
     <Layout>
       <SEO title="Page two" />
@@ -74,6 +172,7 @@ const SecondPage = () => {
       <p>Welcome to Bookings page</p>
       <Link to="/">Go back to the homepage</Link>
       <hr />
+      {user ? <p>{user}</p> : <p>no user</p>}
       {!user ? (
         <>
           <p>no user detected, need to sign in or log in!</p>
@@ -132,7 +231,6 @@ const SecondPage = () => {
       )}
       {/* eslint-disable-next-line react/button-has-type */}
       <button onClick={myHandler}>Click!</button>
-
       <hr />
     </Layout>
   )
