@@ -57,7 +57,7 @@ export async function handler(event, context) {
     })
 
   client.close()
-    const token = userToken.createToken(user._id)
+  const token = userToken.createToken(user._id)
   return {
     statusCode: 201,
     body: JSON.stringify({
@@ -65,6 +65,10 @@ export async function handler(event, context) {
       user_id: user._id,
       status: 200,
     }),
-      headers: { "Set-Cookie": `userToken=${token}; Max-Age=${userToken.maxAge * 1000}; httpOnly` }
+    headers: {
+      "Set-Cookie": `userToken=${token}; Max-Age=${
+        userToken.maxAge * 1000
+      }; httpOnly`,
+    },
   }
 }

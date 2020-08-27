@@ -1,7 +1,7 @@
 /* eslint-disable no-unreachable */
 import { MongoClient } from "mongodb"
 import bcrypt from "bcryptjs"
-import userToken from '../lib/token'
+import userToken from "../lib/token"
 
 // eslint-disable-next-line no-unused-vars
 export async function handler(event, context) {
@@ -26,7 +26,9 @@ export async function handler(event, context) {
         user_id: user._id,
         status: 200,
       }),
-        headers: { "Set-Cookie": `userToken=${token}; Max-Age=${userToken.maxAge}; httpOnly` }
+      headers: {
+        "Set-Cookie": `userToken=${token}; Max-Age=${userToken.maxAge}; httpOnly`,
+      },
     }
   } else if (user) {
     return {

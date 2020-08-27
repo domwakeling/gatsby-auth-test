@@ -24,7 +24,7 @@ the overall Bowles website, rather than standalone.
   is in `src/lib/token.js`
 - added logic so that when a user goes to the booking page and isn't logged in, app will check with
   an endpoint (`polltoken`) whether (a) there is a jwt in cookies, (b) whether that jwt is valid
-  (signed and   in-date) and (c) whether an id retrieved from the validated jwt is itself valid; if
+  (signed and in-date) and (c) whether an id retrieved from the validated jwt is itself valid; if
   yes to all three, will auto-log in the user
 - also read some more on the `swr` package and believe I can set a much longer refresh period in the
   `bookings.jsx` component but then use the `swr/mutate` method in different components to trigger
@@ -32,7 +32,7 @@ the overall Bowles website, rather than standalone.
 
 ## Next Up:
 
-At this point I *think* we're on the home straight; it needs some more testing, but looks as though
+At this point I _think_ we're on the home straight; it needs some more testing, but looks as though
 the auth system is working and although I need to re-write all the API for storing/changing booking
 info this is all work I can adapt.
 
@@ -125,4 +125,4 @@ Not entirely sure what happened (I could have sworn that I've user `bcrypt` befo
 I tried it threw a **HUUUGE** list of errors and warnings at me; have therefore decided to go the
 easy route and instead use `bcryptjs` which is an entirely-JS implementation. Apparently it's not
 as fast/efficient, but frankly I don't have anything like the throughput to have to worry about
-speed so the convenience wins out every time. 
+speed so the convenience wins out every time.

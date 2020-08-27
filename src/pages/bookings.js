@@ -26,20 +26,19 @@ const SecondPage = () => {
   const [password, setPassword] = useState("")
   const [secret, setSecret] = useState("")
 
-useEffect(() => {
+  useEffect(() => {
     async function fetchData() {
-        const res = await fetch("/.netlify/functions/polltoken")
-        if (res.status == 200) {
-            const data = await res.json()
-            setUser(data.id)
-        }
+      const res = await fetch("/.netlify/functions/polltoken")
+      if (res.status == 200) {
+        const data = await res.json()
+        setUser(data.id)
+      }
     }
     if (!user) {
-        // send to an endpoint to see whether there's a token embedded ...
-        fetchData()   
-        
+      // send to an endpoint to see whether there's a token embedded ...
+      fetchData()
     }
-}, [user])
+  }, [user])
 
   const handleEmail = e => {
     e.preventDefault()
@@ -165,6 +164,20 @@ useEffect(() => {
     setMode(modes.LOGGING_IN)
   }
 
+  const handleLogout = async e => {
+    e.preventDefault
+    setUser(null)
+    setMode(modes.LOGGING_IN)
+    const res = await fetch("/.netlify/functions/logout")
+    if (res.status == 200) {
+      toast.notify("You have been logged out", {
+        type: "success",
+        title: "Success",
+        duration: 2,
+      })
+    }
+  }
+
   return (
     <Layout>
       <SEO title="Page two" />
@@ -231,6 +244,7 @@ useEffect(() => {
       )}
       {/* eslint-disable-next-line react/button-has-type */}
       <button onClick={myHandler}>Click!</button>
+      {user ? <button onClick={handleLogout}>Log out</button> : ""}
       <hr />
     </Layout>
   )
