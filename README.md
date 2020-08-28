@@ -29,20 +29,20 @@ the overall Bowles website, rather than standalone.
 - also read some more on the `swr` package and believe I can set a much longer refresh period in the
   `bookings.jsx` component but then use the `swr/mutate` method in different components to trigger
   a 'signal' to refresh the data (when a user tries to add/remove a racer)
+- **think** I've solved the worst of the XSS/CSRF security issues, but to be proven
+- "properly" implemented most of the sign-in/sign-up UI and logic, including breaking out components
+  as appropriate to simplify the `bookings.js` code
 
 ## Next Up:
 
-At this point I _think_ we're on the home straight; it needs some more testing, but looks as though
-the auth system is working and although I need to re-write all the API for storing/changing booking
-info this is all work I can adapt.
-
-So the list is:
-
-- check whether the implementation of JWTs and cookies is meeting recommendations for security,
-  protecting against XSS attacks etc
+- add logic/UI for adding racers to an account
 - implement the bookings system
 - note re: above; I think it's going to be better to have Tuesday/Friday bookings as two pages
   (from a user experience at least) to avoid complication over which day is being booked for
+- look at what happens if a JWT expires during a session (planning on making them hour-long, and
+  dumping a user back to the log-in page with a "your session has expired" message; this wouldn't
+  be great in a larger project that users would sit on "all-day", but for discrete bookings I feel
+  it is appropriate)
 
 ---
 

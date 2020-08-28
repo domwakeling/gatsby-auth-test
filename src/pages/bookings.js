@@ -4,34 +4,32 @@ import React, { useState, useEffect } from "react"
 import { Link } from "gatsby"
 
 import { toast } from "../components/toast"
-
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import Bookings from "../components/bookings"
+import Welcome from "../components/welcome"
+import Racer from "../components/racer"
+import SignInUp from "../components/signinup"
 
-const myHandler = e => {
-  e.preventDefault()
-}
-
-const modes = {
-  SIGNED_IN: 0,
-  LOGGING_IN: 1,
-  SIGNING_UP: 2,
-}
+import modes from "../lib/modes"
 
 const SecondPage = () => {
   const [user, setUser] = useState(null)
-  const [mode, setMode] = useState(modes.LOGGING_IN)
+  const [mode, setMode] = useState(modes.WELCOME)
+  const [racers, setRacers] = useState(null)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [secret, setSecret] = useState("")
 
   useEffect(() => {
+    // hooks require that async function is defined before being called; this checks for a token
     async function fetchData() {
       const res = await fetch("/.netlify/functions/polltoken")
       if (res.status == 200) {
         const data = await res.json()
         setUser(data.id)
+        setRacers(data.racers)
+        setMode(modes.SIGNED_IN)
       }
     }
     if (!user) {
@@ -39,6 +37,19 @@ const SecondPage = () => {
       fetchData()
     }
   }, [user])
+
+  // capture <enter> key from an input and react accordingly
+  const keyDown = e => {
+    if (e.keyCode == 13) {
+      e.preventDefault()
+      const fakeE = { preventDefault: () => {} }
+      if (mode == modes.LOGGING_IN) {
+        submitLogin(fakeE)
+      } else {
+        submitSignUp(fakeE)
+      }
+    }
+  }
 
   const handleEmail = e => {
     e.preventDefault()
@@ -88,6 +99,7 @@ const SecondPage = () => {
       })
       setUser(data.user_id)
       setMode(modes.SIGNED_IN)
+      setRacers(data.racers)
       setEmail("")
       setPassword("")
       setSecret("")
@@ -142,6 +154,7 @@ const SecondPage = () => {
       })
       setUser(data.user_id)
       setMode(modes.SIGNED_IN)
+      setRacers([])
       setEmail("")
       setPassword("")
       setSecret("")
@@ -167,7 +180,8 @@ const SecondPage = () => {
   const handleLogout = async e => {
     e.preventDefault
     setUser(null)
-    setMode(modes.LOGGING_IN)
+    setMode(modes.WELCOME)
+    setRacers(null)
     const res = await fetch("/.netlify/functions/logout")
     if (res.status == 200) {
       toast.notify("You have been logged out", {
@@ -181,71 +195,75 @@ const SecondPage = () => {
   return (
     <Layout>
       <SEO title="Page two" />
-      <h1>Bookings</h1>
-      <p>Welcome to Bookings page</p>
       <Link to="/">Go back to the homepage</Link>
-      <hr />
-      {user ? <p>{user}</p> : <p>no user</p>}
-      {!user ? (
+      <h2>Friday Night Training</h2>
+      {mode == modes.WELCOME ? (
+        <Welcome clickSignUp={changeToSignUp} clickLogin={changeToLogIn} />
+      ) : (
+        ""
+      )}
+      {!user && mode != modes.WELCOME ? (
+        <SignInUp
+          mode={mode}
+          handleEmail={handleEmail}
+          email={email}
+          handlePassword={handlePassword}
+          password={password}
+          handleSecret={handleSecret}
+          secret={secret}
+          keyDown={keyDown}
+          submitLogin={submitLogin}
+          submitSignUp={submitSignUp}
+          changeToLogIn={changeToLogIn}
+          changeToSignUp={changeToSignUp}
+        />
+      ) : (
+        ""
+      )}
+      {user ? (
         <>
-          <p>no user detected, need to sign in or log in!</p>
-          <form>
-            <label htmlFor="email">email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              onChange={handleEmail}
-              value={email}
-            />
-            <label htmlFor="password">password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              onChange={handlePassword}
-              value={password}
-            />
-            {mode == modes.SIGNING_UP ? (
-              <>
-                <label htmlFor="secret">secret</label>
-                <input
-                  type="secret"
-                  id="secret"
-                  name="secret"
-                  onChange={handleSecret}
-                  value={secret}
-                />
-              </>
-            ) : (
-              ""
-            )}
-          </form>
-          <br />
-          {mode == modes.LOGGING_IN ? (
-            <>
-              <button onClick={submitLogin}>Log In</button>
-              <p>Or do you want to create a new account?</p>
-              <button onClick={changeToSignUp}>Sign Up</button>
-            </>
+          <hr />
+          {racers && racers.length > 0 ? (
+            <div>
+              <p>
+                There {racers.length === 1 ? "is" : "are"} {racers.length}{" "}
+                {racers.length === 1 ? "racer" : "racers"} on your account. Do
+                you want to <a href="#">add another racer</a>?
+              </p>
+              <div className="racerlist">
+                {racers.map((racer, idx) => (
+                  <Racer
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={idx}
+                    tabNum={idx}
+                    name={racer}
+                    status="normal"
+                    //   clickhandler={handleRacerClick}
+                    userid={user}
+                  />
+                ))}
+              </div>
+              <p>
+                Tap/click on a racer&apos;s name above to add or remove them
+                from the training list.
+              </p>
+            </div>
           ) : (
-            <>
-              <button onClick={submitSignUp}>Sign Up</button>
-              <p>Or do you want to log in to an existing account?</p>
-              <button onClick={changeToLogIn}>Log In</button>
-            </>
+            <p>
+              Please <a href="#">add a racer</a>.
+            </p>
           )}
+          <Bookings />
+          <button onClick={handleLogout}>Log out</button>
         </>
       ) : (
-        <>
-          <br />
-          <Bookings />
-        </>
+        ""
       )}
-      {/* eslint-disable-next-line react/button-has-type */}
-      <button onClick={myHandler}>Click!</button>
-      {user ? <button onClick={handleLogout}>Log out</button> : ""}
+
       <hr />
+      <p id="disclaimer">
+        This booking system uses cookies for user-account authentication
+      </p>
     </Layout>
   )
 }

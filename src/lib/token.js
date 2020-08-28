@@ -11,7 +11,8 @@ const userToken = {
     return jwt.sign({ id }, jwtsecret, { expiresIn: max_age })
   },
 
-  verifyToken: async token => {
+  // validateTokenId is used to veridy a token AND check that the id is valid
+  validateTokenId: async token => {
     try {
       const data = jwt.verify(token, jwtsecret)
       if (data.id) {
@@ -36,6 +37,18 @@ const userToken = {
       }
     } catch (err) {
       return null
+    }
+  },
+
+  // verifyToken is only used to verify that the token is signed and in-date
+  verifyToken: async token => {
+    try {
+      const data = jwt.verify(token, jwtsecret)
+      if (data.id) {
+        return true
+      }
+    } catch {
+      return false
     }
   },
 }

@@ -24,10 +24,11 @@ export async function handler(event, context) {
       body: JSON.stringify({
         message: "Successfully logged in",
         user_id: user._id,
+        racers: user.racers,
         status: 200,
       }),
       headers: {
-        "Set-Cookie": `userToken=${token}; Max-Age=${userToken.maxAge}; httpOnly`,
+        "Set-Cookie": `userToken=${token}; Max-Age=${userToken.maxAge}; httpOnly; SameSite=Strict`,
       },
     }
   } else if (user) {

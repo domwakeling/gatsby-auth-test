@@ -15,6 +15,7 @@
     "require": true,
     "document": true,
     "setTimeout": true,
-    "clearTimeout": true
+    "clearTimeout": true,
+    "alert": true
   }
 }

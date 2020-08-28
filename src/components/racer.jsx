@@ -12,23 +12,30 @@ import PropTypes from "prop-types"
 //     unused: '#bbb',
 //   };
 
-const Racer = ({ name, status, clickhandler, userid, tabNum }) => (
-  <>
-    {userid ? (
-      <div
-        className="lozenge clickable"
-        role="menuitem"
-        tabIndex={tabNum}
-        onClick={() => clickhandler(userid, name)}
-        status={status}
-      >
-        {name}
-      </div>
-    ) : (
-      <div className="lozenge">{name}</div>
-    )}
-  </>
-)
+const Racer = ({ name, status, clickhandler, userid, tabNum }) => {
+  const handleClick = e => {
+    e.preventDefatul()
+    clickhandler(userid, name)
+  }
+
+  return (
+    <>
+      {userid ? (
+        <div
+          className="lozenge clickable"
+          role="menuitem"
+          tabIndex={tabNum}
+          onClick={handleClick}
+          status={status}
+        >
+          {name}
+        </div>
+      ) : (
+        <div className="lozenge">{name}</div>
+      )}
+    </>
+  )
+}
 
 Racer.defaultProps = {
   status: "normal",

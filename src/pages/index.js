@@ -17,11 +17,6 @@ const myHandler2 = e => {
   fetch("/.netlify/functions/cookie_read_test")
     .then(response => response.json())
     .then(console.log)
-  // if (typeof document !== 'undefined') {
-  //     console.log('COOKIES\n', document.cookie)
-  // } else {
-  //     console.log('Frozen, problem!')
-  // }
 }
 
 const myHandler3 = e => {

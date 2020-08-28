@@ -68,7 +68,7 @@ export async function handler(event, context) {
     headers: {
       "Set-Cookie": `userToken=${token}; Max-Age=${
         userToken.maxAge * 1000
-      }; httpOnly`,
+      }; httpOnly; SameSite=Strict`,
     },
   }
 }
