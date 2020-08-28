@@ -11,7 +11,7 @@ export const getNextDay = day => {
   date.setDate(date.getDate() + ((dayNum - date.getDay()) % 7))
   const ds0 =
     `0${date.getDate()}`.slice(-2) +
-    `0${date.getMonth()}`.slice(-2) +
+    `0${date.getMonth() + 1}`.slice(-2) +
     date.getFullYear()
   let ds1 = date.toDateString().split(" ")
   ds1 = `${ds1[2]} ${ds1[1]} ${ds1[3]}`
@@ -20,6 +20,7 @@ export const getNextDay = day => {
 
 const Bookings = ({ weekday }) => {
   const ds = getNextDay(weekday)
+  console.log(ds)
   // update the booking data every minute; code elsewhere to trigger a refresh when user tries
   // to change their own booking data
   const { data, error } = useSWR(
@@ -33,10 +34,7 @@ const Bookings = ({ weekday }) => {
   if (!data) {
     return (
       <div>
-        <h2>
-          Bookings for
-          {ds[1]}
-        </h2>
+        <h2>Bookings for {ds[1]}</h2>
         <p>loading...</p>
         <br />
       </div>

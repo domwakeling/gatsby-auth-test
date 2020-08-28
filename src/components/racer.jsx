@@ -27,11 +27,21 @@ const Racer = ({ name, status, clickhandler, userid, tabNum }) => {
             display: inline-block;
             padding: 0.75rem 1rem;
             border-radius: 0.5rem;
-            background-color: ${bgcolors[status]};
-            color: ${colors[status]};
             margin-bottom: 0.5rem;
             margin-right: 1.0rem;
             min-width: 200px;
+          }
+          .lozenge.normal {
+            background-color: ${bgcolors.normal};
+            color: ${colors.normal};
+          }
+          .lozenge.highlight {
+            background-color: ${bgcolors.highlight};
+            color: ${colors.highlight};
+          }
+          .lozenge.unused {
+            background-color: ${bgcolors.unused};
+            color: ${colors.unused};
           }
           .clickable {
             cursor: pointer;
@@ -43,7 +53,7 @@ const Racer = ({ name, status, clickhandler, userid, tabNum }) => {
       </style>
       {userid ? (
         <div
-          className="lozenge clickable"
+          className={`lozenge clickable ${status}`}
           role="menuitem"
           tabIndex={tabNum}
           onClick={handleClick}
@@ -52,7 +62,7 @@ const Racer = ({ name, status, clickhandler, userid, tabNum }) => {
           {name}
         </div>
       ) : (
-        <div className="lozenge">{name}</div>
+          <div className={`lozenge ${status}`}>{name}</div>
       )}
     </>
   )
