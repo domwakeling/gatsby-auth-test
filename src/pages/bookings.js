@@ -253,7 +253,7 @@ const SecondPage = () => {
               Please <a href="#">add a racer</a>.
             </p>
           )}
-          <Bookings />
+          <Bookings weekday="Friday" />
           <button onClick={handleLogout}>Log out</button>
         </>
       ) : (

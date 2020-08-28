@@ -18,6 +18,7 @@ const SignInUp = ({
   changeToSignUp,
 }) => (
   <>
+    <h2>{mode == modes.SIGNING_UP ? "Sign Up" : "Sign In"}</h2>
     <form>
       <label htmlFor="email">email</label>
       <input
