@@ -44,6 +44,19 @@ the overall Bowles website, rather than standalone.
   be great in a larger project that users would sit on "all-day", but for discrete bookings I feel
   it is appropriate)
 
+## What's Left (Long List)
+
+- [x] endpoint & UI for adding a racer to account (and updating racers hook)
+- [ ] endpoint for requesting a password reset token
+- [ ] endpoint for resetting password with valid token
+- [ ] logic to switch between Tuesday and Thursday training sessions (and re-loading bookings on
+that basis)
+- [ ] logic to add/remove racer from database
+- [ ] styling for inputs
+
+_Just occurred to me that I could have **both** booking lists in 'state' and update them as things
+change, rather than using a local variable (hook? not sure) within Bookings_
+
 ---
 
 ## Notes
@@ -76,7 +89,7 @@ in order to successfully implement these patterns ..._
   publish = "public"
 ```
 
-- proxy emulated functions by editing `gatsby-config.js`:
+- proxy emulated functions for local development environment by editing `gatsby-config.js`:
 
 ```
 // at the top:
@@ -108,16 +121,30 @@ There seems to be no sane way to get `netlify-lambda` to access `process.env` in
 
 - add variables to the `netlify.toml` file; not happy with this since I'm using GitHub to deploy
   to Netlify
-- use a test and static replace in the server code, with either a mock or an alternative (non-production) setting; something like:
+- use a test and static replace in the server code, with either a mock or an alternative
+  (non-production) setting; something like:
 
 ```
-const url = process.env.MONGODB_URL || "some_string"
+const url = process.env.MONGODB_URL || "mongodb://127.0.0.1:27017"
 ```
 
 The main thing that I need to test at this stage is MongoDB access, and at the moment I'm electing
 to simply run a local instance of `mongod` rather than 'sacrifice' a public instance by revealing
 user/password information on GitHub. This may be re-thought when it comes to the other secrets
 (which are pretty much entirely to do with gmail and sending password-recovery emails).
+
+Commands for **my** local mongodb instance:
+
+```
+brew services start mongodb-community@3.6
+```
+and
+```
+brew services stop mongodb-community@3.6
+```
+
+And then `mongo <dbname>` from another terminal window to get a local shell in order to interact
+with the database.
 
 ### bcrypt vs bcryptjs
 

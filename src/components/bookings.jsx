@@ -20,7 +20,6 @@ export const getNextDay = day => {
 
 const Bookings = ({ weekday }) => {
   const ds = getNextDay(weekday)
-  console.log(ds)
   // update the booking data every minute; code elsewhere to trigger a refresh when user tries
   // to change their own booking data
   const { data, error } = useSWR(
@@ -45,6 +44,7 @@ const Bookings = ({ weekday }) => {
     weekday == "Tuesday"
       ? [0, 1, 2, 3, 4, 5]
       : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+      
   return (
     <div>
       <h2>Bookings for {ds[1]}</h2>

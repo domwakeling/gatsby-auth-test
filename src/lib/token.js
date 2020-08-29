@@ -40,15 +40,15 @@ const userToken = {
     }
   },
 
-  // verifyToken is only used to verify that the token is signed and in-date
+  // verifyToken is only used to verify that the token is signed and in-date; returns id or null
   verifyToken: async token => {
     try {
       const data = jwt.verify(token, jwtsecret)
       if (data.id) {
-        return true
+        return data.id
       }
     } catch {
-      return false
+      return null
     }
   },
 }

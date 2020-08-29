@@ -17,6 +17,7 @@ const SecondPage = () => {
   const [user, setUser] = useState(null)
   const [mode, setMode] = useState(modes.WELCOME)
   const [racers, setRacers] = useState(null)
+const [racerName, setRacerName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [secret, setSecret] = useState("")
@@ -51,6 +52,14 @@ const SecondPage = () => {
     }
   }
 
+    const keyDownName = e => {
+        if (e.keyCode == 13) {
+            e.preventDefault()
+            const fakeE = { preventDefault: () => { } }
+            handleAddRacer(fakeE)
+        }
+    }
+
   const handleEmail = e => {
     e.preventDefault()
     setEmail(e.target.value)
@@ -65,6 +74,11 @@ const SecondPage = () => {
     e.preventDefault()
     setSecret(e.target.value)
   }
+
+    const handleName = e => {
+        e.preventDefault()
+        setRacerName(e.target.value)
+    }
 
   const submitLogin = async e => {
     e.preventDefault()
@@ -145,7 +159,7 @@ const SecondPage = () => {
     })
     const status = res.status
     const data = await res.json()
-    // if successfui ...
+    // if successful ...
     if (status === 201) {
       toast.notify("Your account is being set up", {
         type: "success",
@@ -177,6 +191,16 @@ const SecondPage = () => {
     setMode(modes.LOGGING_IN)
   }
 
+  const changeToAddRacer = e => {
+      e.preventDefault()
+      setMode(modes.ADDING_RACER)
+  }
+
+  const changeToSignedIn = e => {
+      e.preventDefault()
+      setMode(modes.SIGNED_IN)
+  }
+
   const handleLogout = async e => {
     e.preventDefault
     setUser(null)
@@ -190,6 +214,44 @@ const SecondPage = () => {
         duration: 2,
       })
     }
+  }
+
+  const handleAddRacer = async (e) => {
+      e.preventDefault
+      const body = {id: user, name: racerName}
+      const res = await fetch("/.netlify/functions/newracer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+      })
+      const status = res.status
+      const data = await res.json()
+      if (status == 200) {
+          let currRacers = await racers
+          if (currRacers.indexOf(racerName) < 0) {
+              // confirm doesn't already exist => already protected in API
+              currRacers = [...currRacers, racerName]
+              toast.notify("Racer added", {
+                  type: "success",
+                  title: "Success",
+                  duration: 2,
+              })
+              setRacers(currRacers)
+              setRacerName('')
+          } else {
+              toast.notify("Racer already exists", {
+                  type: "warn",
+                  title: "Warning",
+                  duration: 2,
+              })    
+          }
+      } else {
+          toast.notify(data.message, {
+              type: "error",
+              title: "Error",
+              duration: 2,
+          })
+      }
   }
 
   return (
@@ -227,8 +289,7 @@ const SecondPage = () => {
             <div>
               <p>
                 There {racers.length === 1 ? "is" : "are"} {racers.length}{" "}
-                {racers.length === 1 ? "racer" : "racers"} on your account. Do
-                you want to <a href="#">add another racer</a>?
+                {racers.length === 1 ? "racer" : "racers"} on your account.
               </p>
               <div className="racerlist">
                 {racers.map((racer, idx) => (
@@ -243,17 +304,39 @@ const SecondPage = () => {
                   />
                 ))}
               </div>
-              <p>
-                Tap/click on a racer&apos;s name above to add or remove them
-                from the training list.
-              </p>
+              <p>Do you want to <a href="#" onClick={changeToAddRacer}>add another racer</a>?</p>
+              {mode == modes.SIGNED_IN ? (
+                <p>
+                    Tap/click on a racer&apos;s name above to add or remove them
+                    from the training list.
+                </p>
+              ) : ''}
             </div>
           ) : (
             <p>
-              Please <a href="#">add a racer</a>.
+              Please <a href="#" onClick={changeToAddRacer}>add a racer</a>.
             </p>
           )}
-          <Bookings weekday="Friday" />
+          {mode == modes.ADDING_RACER ? (
+              <>
+                      <form>            
+                                  <label htmlFor="name">n</label>
+                                  <input
+                                      type="text"
+                                      id="name"
+                                      name="name"
+                                      onChange={handleName}
+                                      onKeyDown={keyDownName}
+                                      value={racerName}
+                                  />
+                                  </form>     
+                          <button onClick={handleAddRacer}>Add racer</button>
+            <p>Or <a href="#" onClick={changeToSignedIn}> go back</a>.</p>
+                      </>
+          ) : '' }
+          {mode == modes.SIGNED_IN ? (
+            <Bookings weekday="Friday" />
+          ) : '' }
           <button onClick={handleLogout}>Log out</button>
         </>
       ) : (

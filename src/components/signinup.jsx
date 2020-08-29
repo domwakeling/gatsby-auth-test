@@ -18,9 +18,34 @@ const SignInUp = ({
   changeToSignUp,
 }) => (
   <>
+    <style>
+      {`
+        input {
+            border: 1px solid #d79022;
+            min-width: 20rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0.25rem;
+            padding: 0.5rem 0 0.5rem 0.2rem;
+            font-size: 1rem;
+          }
+          label, .circle {
+            font-size: 1.5rem;
+            display: inline-block;
+            background-color: #394c8f;
+            border-radius: 50%;
+            width: 2.1rem;
+            height: 2.1rem;
+            text-align: center;
+            color: white;
+            margin-right: 0.75rem;
+            position: relative;
+          }
+      `}
+      
+    </style>
     <h2>{mode == modes.SIGNING_UP ? "Sign Up" : "Sign In"}</h2>
     <form>
-      <label htmlFor="email">email</label>
+      <label htmlFor="email">e</label>
       <input
         type="email"
         id="email"
@@ -29,7 +54,7 @@ const SignInUp = ({
         onKeyDown={keyDown}
         value={email}
       />
-      <label htmlFor="password">password</label>
+      <label htmlFor="password">p</label>
       <input
         type="password"
         id="password"
@@ -40,7 +65,7 @@ const SignInUp = ({
       />
       {mode == modes.SIGNING_UP ? (
         <>
-          <label htmlFor="secret">secret</label>
+          <label htmlFor="secret">s</label>
           <input
             type="secret"
             id="secret"

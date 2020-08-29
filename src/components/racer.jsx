@@ -15,6 +15,7 @@ const bgcolors = {
 const Racer = ({ name, status, clickhandler, userid, tabNum }) => {
   const handleClick = e => {
     e.preventDefault()
+    e.target.blur()
     clickhandler(userid, name)
   }
 
