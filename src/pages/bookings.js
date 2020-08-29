@@ -15,6 +15,7 @@ import modes from "../lib/modes"
 
 const SecondPage = () => {
   const [user, setUser] = useState(null)
+  const [loggingOut, setLoggingOut] = useState(false)
   const [mode, setMode] = useState(modes.WELCOME)
   const [racers, setRacers] = useState(null)
   const [racerName, setRacerName] = useState("")
@@ -33,7 +34,7 @@ const SecondPage = () => {
         setMode(modes.SIGNED_IN)
       }
     }
-    if (!user) {
+    if (!user && !loggingOut) {
       // send to an endpoint to see whether there's a token embedded ...
       fetchData()
     }
@@ -172,11 +173,13 @@ const SecondPage = () => {
   const changeToSignUp = e => {
     e.preventDefault()
     setMode(modes.SIGNING_UP)
+    setLoggingOut(false)
   }
 
   const changeToLogIn = e => {
     e.preventDefault()
     setMode(modes.LOGGING_IN)
+    setLoggingOut(false)
   }
 
   const changeToAddRacer = e => {
@@ -187,14 +190,16 @@ const SecondPage = () => {
   const changeToSignedIn = e => {
     e.preventDefault()
     setMode(modes.SIGNED_IN)
+    setLoggingOut(false)
   }
 
   const handleLogout = async e => {
     e.preventDefault
+    setLoggingOut(true)
+    const res = await fetch("/.netlify/functions/logout")
     setUser(null)
     setMode(modes.WELCOME)
     setRacers(null)
-    const res = await fetch("/.netlify/functions/logout")
     if (res.status == 200) {
       toast.notify("You have been logged out", {
         type: "success",
