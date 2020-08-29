@@ -50,7 +50,7 @@ the overall Bowles website, rather than standalone.
 - [ ] endpoint for requesting a password reset token
 - [ ] endpoint for resetting password with valid token
 - [ ] logic to switch between Tuesday and Thursday training sessions (and re-loading bookings on
-that basis)
+      that basis)
 - [ ] logic to add/remove racer from database
 - [ ] styling for inputs
 
@@ -138,7 +138,9 @@ Commands for **my** local mongodb instance:
 ```
 brew services start mongodb-community@3.6
 ```
+
 and
+
 ```
 brew services stop mongodb-community@3.6
 ```

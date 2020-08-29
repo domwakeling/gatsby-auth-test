@@ -63,7 +63,7 @@ const Racer = ({ name, status, clickhandler, userid, tabNum }) => {
           {name}
         </div>
       ) : (
-          <div className={`lozenge ${status}`}>{name}</div>
+        <div className={`lozenge ${status}`}>{name}</div>
       )}
     </>
   )

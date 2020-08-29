@@ -43,7 +43,6 @@ const Welcome = ({ clickSignUp, clickLogin }) => {
           }
         `}
       </style>
-      <h2>Training Booking System</h2>
       <p>
         Please either{" "}
         <a href="#" onClick={clickLogin}>
