@@ -22,7 +22,7 @@ const UserRacers = ({ racers, mode, user, changeToAddRacer }) => {
             tabNum={idx}
             name={racer}
             status="normal"
-              clickhandler={handleRacerClick}
+            clickhandler={handleRacerClick}
             userid={user}
           />
         ))}
