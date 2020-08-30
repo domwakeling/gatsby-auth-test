@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import useSWR from "swr"
 import Racer from "./racer"
-import modes from "../lib/modes"
+import modes from "../../lib/modes"
 
 const fetcher = url => fetch(url).then(r => r.json())
 

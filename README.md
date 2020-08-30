@@ -40,6 +40,8 @@ the overall Bowles website, rather than standalone.
   updated) from one API request and both are stored in memory so that the UI information changes
   immediately
 - added booking logic
+- re-factored code so that component-based logic is contained within the component rather than
+  being passed down from the `bookings` page
 
 ## Next Up:
 
@@ -60,7 +62,10 @@ the overall Bowles website, rather than standalone.
 - [x] logic to add/remove racer from database
 - [ ] styling for inputs
 - [ ] JWT validation where appropriate
-- [ ] ensure that add racer and add/remove booking work when attached to the main DB
+- [x] ensure that add racer and add/remove booking work when attached to the main DB
+- [ ] (minimal) code re-factoring _don't want to go nuts with this, but where possible make sure
+  that the logic for a component is contained within the component rather than adding to the length
+  of the `<page>.js` file_
 - [ ] acid test: ensure that an active install on Netlify switches the dates correctly when a
       Tuesday or Friday finishes (burnt considerably on some issues with calendars on the main Bowles
       site over this, and don't want to have it happen again ...)

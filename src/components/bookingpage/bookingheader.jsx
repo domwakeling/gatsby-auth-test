@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import modes from "../lib/modes"
+import modes from "../../lib/modes"
 
 const BookingHeader = ({ mode, setMode }) => {
   const changeDay = e => {

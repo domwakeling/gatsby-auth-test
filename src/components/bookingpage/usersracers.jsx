@@ -1,9 +1,9 @@
 import React from "react"
 import PropTypes from "prop-types"
-import modes from "../lib/modes"
+import modes from "../../lib/modes"
 import Racer from "./racer"
 import { getNextDay } from "./bookings"
-import { toast } from "./toast"
+import { toast } from "../toast"
 import { mutate } from "swr"
 
 const UserRacers = ({ racers, mode, user, changeToAddRacer }) => {
