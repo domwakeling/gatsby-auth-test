@@ -34,7 +34,7 @@ const UserRacers = ({ racers, mode, user, changeToAddRacer }) => {
         </a>
         ?
       </p>
-      {mode == modes.SIGNED_IN ? (
+      {mode == modes.TUESDAY || mode == modes.FRIDAY ? (
         <p>
           Tap/click on a racer&apos;s name above to add or remove them from the
           training list.

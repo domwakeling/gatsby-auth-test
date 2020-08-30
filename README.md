@@ -29,27 +29,31 @@ the overall Bowles website, rather than standalone.
 - also read some more on the `swr` package and believe I can set a much longer refresh period in the
   `bookings.jsx` component but then use the `swr/mutate` method in different components to trigger
   a 'signal' to refresh the data (when a user tries to add/remove a racer)
-- **think** I've solved the worst of the XSS/CSRF security issues, but to be proven
+- **think** I've solved the worst of the XSS/CSRF security issues, but to be proven (worried that
+  this will be problematic due to (a) hosting re-direct to Netlify and/or (b) possibly `https` vs
+  `http` issues)
 - "properly" implemented most of the sign-in/sign-up UI and logic, including breaking out components
   as appropriate to simplify the `bookings.js` code
+- added logic and UI for a user to add a racer to their account
+- added logic and UI to easily switch between Tuesday and Friday training sessions, including a
+  change to `getbookings.js` so that now bookings for both sessions are read (and regularly
+  updated) from one API request and both are stored in memory so that the UI information changes
+  immediately
 
 ## Next Up:
 
-- add logic/UI for adding racers to an account
-- implement the bookings system
-- note re: above; I think it's going to be better to have Tuesday/Friday bookings as two pages
-  (from a user experience at least) to avoid complication over which day is being booked for
+- finish implementing the bookings system
 - look at what happens if a JWT expires during a session (planning on making them hour-long, and
   dumping a user back to the log-in page with a "your session has expired" message; this wouldn't
   be great in a larger project that users would sit on "all-day", but for discrete bookings I feel
   it is appropriate)
 
-## What's Left (Long List)
+## What's Left (Ever-Shortening List)
 
 - [x] endpoint & UI for adding a racer to account (and updating racers hook)
 - [ ] endpoint for requesting a password reset token
 - [ ] endpoint for resetting password with valid token
-- [ ] logic to switch between Tuesday and Thursday training sessions (and re-loading bookings on
+- [x] logic to switch between Tuesday and Friday training sessions (and re-loading bookings on
       that basis)
 - [ ] logic to add/remove racer from database
 - [ ] styling for inputs
@@ -68,7 +72,8 @@ in order to successfully implement these patterns ..._
 
 - add dependencies, `npm install -D http-proxy-middleware netlify-lambda npm-run-all` (these allow
   testing using functions)
-- change the scripts in `package.json` (any other scripts, such as `format` or `clean`, can be left):
+- change the scripts in `package.json` (any other scripts, such as `format` or `clean`, can be left)
+  to the following:
 
 ```
 "develop": "gatsby develop",

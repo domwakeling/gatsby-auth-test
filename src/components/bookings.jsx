@@ -2,11 +2,12 @@ import React from "react"
 import PropTypes from "prop-types"
 import useSWR from "swr"
 import Racer from "./racer"
+import modes from "../lib/modes"
 
 const fetcher = url => fetch(url).then(r => r.json())
 
-export const getNextDay = day => {
-  const dayNum = day == "Tuesday" ? 9 : 12
+export const getNextDay = mode => {
+  const dayNum = mode == modes.TUESDAY ? 9 : 12
   const date = new Date()
   date.setDate(date.getDate() + ((dayNum - date.getDay()) % 7))
   const ds0 =
@@ -18,44 +19,59 @@ export const getNextDay = day => {
   return [ds0, ds1]
 }
 
-const Bookings = ({ weekday }) => {
-  const ds = getNextDay(weekday)
+const Bookings = ({ mode, setMode }) => {
+  const nextFri = getNextDay(modes.FRIDAY)
+  const nextTue = getNextDay(modes.TUESDAY)
+
+  const changeDay = e => {
+    e.preventDefault()
+    setMode(mode == modes.FRIDAY ? modes.TUESDAY : modes.FRIDAY)
+  }
+
   // update the booking data every minute; code elsewhere to trigger a refresh when user tries
   // to change their own booking data
-  const { data, error } = useSWR(
-    `/.netlify/functions/getbookings/${ds[0]}`,
+
+  const {
+    data,
+    error,
+  } = useSWR(
+    `/.netlify/functions/getbookings?fri=${nextFri[0]}&tue=${nextTue[0]}`,
     fetcher,
     { refreshInterval: 60 * 1000 }
   )
-
   if (error) return <div>failed to load</div>
 
   if (!data) {
     return (
       <div>
-        <h2>Bookings for {ds[1]}</h2>
+        <h2>Bookings for {mode == modes.FRIDAY ? nextFri[1] : nextTue[1]}</h2>
         <p>loading...</p>
         <br />
       </div>
     )
   }
 
-  const idxs =
-    weekday == "Tuesday"
-      ? [0, 1, 2, 3, 4, 5]
-      : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+  const idxs = Array.from(Array(mode == modes.TUESDAY ? 6 : 15).keys())
 
   return (
     <div>
-      <h2>Bookings for {ds[1]}</h2>
+      <h2>Bookings for {mode == modes.FRIDAY ? nextFri[1] : nextTue[1]}</h2>
+      <br />
+      <p>
+        Do you want to{" "}
+        <a href="#" onClick={changeDay}>
+          see {mode == modes.FRIDAY ? "Tuesday" : "Friday"} instead
+        </a>
+        ?
+      </p>
       <br />
       <div className="racerlist">
         {idxs.map(i =>
-          data && data.racers && data.racers.length > i ? (
+          data && data.racers && data.racers[mode].length > i ? (
             <Racer
               key={i}
               tabNum={i}
-              name={data.racers[i].name}
+              name={data.racers[mode][i].name}
               status="normal"
             />
           ) : (
@@ -68,7 +84,8 @@ const Bookings = ({ weekday }) => {
 }
 
 Bookings.propTypes = {
-  weekday: PropTypes.string.isRequired,
+  mode: PropTypes.number.isRequired,
+  setMode: PropTypes.func.isRequired,
 }
 
 export default Bookings

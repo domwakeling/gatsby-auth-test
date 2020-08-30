@@ -31,7 +31,7 @@ const SecondPage = () => {
         const data = await res.json()
         setUser(data.id)
         setRacers(data.racers)
-        setMode(modes.SIGNED_IN)
+        setMode(modes.FRIDAY)
       }
     }
     if (!user && !loggingOut) {
@@ -101,7 +101,7 @@ const SecondPage = () => {
         duration: 2,
       })
       setUser(data.user_id)
-      setMode(modes.SIGNED_IN)
+      setMode(modes.FRIDAY)
       setRacers(data.racers)
       setEmail("")
       setPassword("")
@@ -156,7 +156,7 @@ const SecondPage = () => {
         duration: 2,
       })
       setUser(data.user_id)
-      setMode(modes.SIGNED_IN)
+      setMode(modes.FRIDAY)
       setRacers([])
       setEmail("")
       setPassword("")
@@ -189,7 +189,7 @@ const SecondPage = () => {
 
   const changeToSignedIn = e => {
     e.preventDefault()
-    setMode(modes.SIGNED_IN)
+    setMode(modes.FRIDAY)
     setLoggingOut(false)
   }
 
@@ -257,8 +257,12 @@ const SecondPage = () => {
         return "Sign In"
       case modes.ADDING_RACER:
         return "Add Racer"
+      case modes.FRIDAY:
+        return "Friday Night Training"
+      case modes.TUEDSAY:
+        return "Tuesday Night Training"
       default:
-        return `${"Friday"} Night Training`
+        return `Training Booking System`
     }
   }
 
@@ -333,7 +337,11 @@ const SecondPage = () => {
           ) : (
             ""
           )}
-          {mode == modes.SIGNED_IN ? <Bookings weekday="Friday" /> : ""}
+          {mode == modes.FRIDAY || mode == modes.TUESDAY ? (
+            <Bookings mode={mode} setMode={setMode} />
+          ) : (
+            ""
+          )}
           <button onClick={handleLogout}>Log out</button>
         </>
       ) : (
