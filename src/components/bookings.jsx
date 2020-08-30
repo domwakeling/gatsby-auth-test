@@ -19,7 +19,7 @@ export const getNextDay = mode => {
   return [ds0, ds1]
 }
 
-const Bookings = ({ mode, setMode }) => {
+const Bookings = ({ mode, setMode, user }) => {
   const nextFri = getNextDay(modes.FRIDAY)
   const nextTue = getNextDay(modes.TUESDAY)
 
@@ -72,7 +72,9 @@ const Bookings = ({ mode, setMode }) => {
               key={i}
               tabNum={i}
               name={data.racers[mode][i].name}
-              status="normal"
+              status={
+                data.racers[mode][i].userid == user ? "highlight" : "normal"
+              }
             />
           ) : (
             <Racer key={i} name="free" status="unused" />
@@ -86,6 +88,7 @@ const Bookings = ({ mode, setMode }) => {
 Bookings.propTypes = {
   mode: PropTypes.number.isRequired,
   setMode: PropTypes.func.isRequired,
+  user: PropTypes.string.isRequired,
 }
 
 export default Bookings

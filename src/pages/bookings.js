@@ -338,7 +338,7 @@ const SecondPage = () => {
             ""
           )}
           {mode == modes.FRIDAY || mode == modes.TUESDAY ? (
-            <Bookings mode={mode} setMode={setMode} />
+            <Bookings mode={mode} setMode={setMode} user={user} />
           ) : (
             ""
           )}
