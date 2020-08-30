@@ -2,6 +2,8 @@
 
 import { MongoClient } from "mongodb"
 
+// TODO: validate JWT?
+
 export async function handler(event, context) {
   // get required days from path and verify 8-digits, return error if not found or verified
   const days = event.queryStringParameters

@@ -4,8 +4,9 @@ import { MongoClient } from "mongodb"
 import modes from "../lib/modes"
 
 export async function handler(event, context) {
+  // TODO: VALIDATE JWT?
+
   // retrieve info from body and validate
-  console.log(event.body)
   const { userid, name, day, mode } = JSON.parse(event.body)
   if (!/^\d{8}$/.test(day) || !userid || !name) {
     return {

@@ -19,14 +19,9 @@ export const getNextDay = mode => {
   return [ds0, ds1]
 }
 
-const Bookings = ({ mode, setMode, user }) => {
+const Bookings = ({ mode, user }) => {
   const nextFri = getNextDay(modes.FRIDAY)
   const nextTue = getNextDay(modes.TUESDAY)
-
-  const changeDay = e => {
-    e.preventDefault()
-    setMode(mode == modes.FRIDAY ? modes.TUESDAY : modes.FRIDAY)
-  }
 
   // update the booking data every minute; code elsewhere to trigger a refresh when user tries
   // to change their own booking data
@@ -57,14 +52,6 @@ const Bookings = ({ mode, setMode, user }) => {
     <div>
       <h2>Bookings for {mode == modes.FRIDAY ? nextFri[1] : nextTue[1]}</h2>
       <br />
-      <p>
-        Do you want to{" "}
-        <a href="#" onClick={changeDay}>
-          see {mode == modes.FRIDAY ? "Tuesday" : "Friday"} instead
-        </a>
-        ?
-      </p>
-      <br />
       <div className="racerlist">
         {idxs.map(i =>
           data && data.racers && data.racers[mode].length > i ? (
@@ -87,7 +74,6 @@ const Bookings = ({ mode, setMode, user }) => {
 
 Bookings.propTypes = {
   mode: PropTypes.number.isRequired,
-  setMode: PropTypes.func.isRequired,
   user: PropTypes.string.isRequired,
 }
 

@@ -39,10 +39,12 @@ the overall Bowles website, rather than standalone.
   change to `getbookings.js` so that now bookings for both sessions are read (and regularly
   updated) from one API request and both are stored in memory so that the UI information changes
   immediately
+- added booking logic
 
 ## Next Up:
 
-- finish implementing the bookings system
+- add password recovery
+- validate JWT before reading or writing to booking collection
 - look at what happens if a JWT expires during a session (planning on making them hour-long, and
   dumping a user back to the log-in page with a "your session has expired" message; this wouldn't
   be great in a larger project that users would sit on "all-day", but for discrete bookings I feel
@@ -55,8 +57,13 @@ the overall Bowles website, rather than standalone.
 - [ ] endpoint for resetting password with valid token
 - [x] logic to switch between Tuesday and Friday training sessions (and re-loading bookings on
       that basis)
-- [ ] logic to add/remove racer from database
+- [x] logic to add/remove racer from database
 - [ ] styling for inputs
+- [ ] JWT validation where appropriate
+- [ ] ensure that add racer and add/remove booking work when attached to the main DB
+- [ ] acid test: ensure that an active install on Netlify switches the dates correctly when a
+      Tuesday or Friday finishes (burnt considerably on some issues with calendars on the main Bowles
+      site over this, and don't want to have it happen again ...)
 
 _Just occurred to me that I could have **both** booking lists in 'state' and update them as things
 change, rather than using a local variable (hook? not sure) within Bookings_

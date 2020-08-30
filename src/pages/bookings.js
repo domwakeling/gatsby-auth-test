@@ -6,8 +6,8 @@ import { toast } from "../components/toast"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import Bookings from "../components/bookings"
+import BookingHeader from "../components/bookingheader"
 import Welcome from "../components/welcome"
-// import Racer from "../components/racer"
 import SignInUp from "../components/signinup"
 import UserRacers from "../components/usersracers"
 
@@ -247,30 +247,11 @@ const SecondPage = () => {
     }
   }
 
-  const pageTitle = () => {
-    switch (mode) {
-      case modes.WELCOME:
-        return "Training Booking System"
-      case modes.SIGNING_UP:
-        return "Sign Up"
-      case modes.LOGGING_IN:
-        return "Sign In"
-      case modes.ADDING_RACER:
-        return "Add Racer"
-      case modes.FRIDAY:
-        return "Friday Night Training"
-      case modes.TUEDSAY:
-        return "Tuesday Night Training"
-      default:
-        return `Training Booking System`
-    }
-  }
-
   return (
     <Layout>
       <SEO title="Page two" />
       <Link to="/">Go back to the homepage</Link>
-      <h2>{pageTitle()}</h2>
+      <BookingHeader mode={mode} setMode={setMode} />
       {mode == modes.WELCOME ? (
         <Welcome clickSignUp={changeToSignUp} clickLogin={changeToLogIn} />
       ) : (
@@ -338,7 +319,7 @@ const SecondPage = () => {
             ""
           )}
           {mode == modes.FRIDAY || mode == modes.TUESDAY ? (
-            <Bookings mode={mode} setMode={setMode} user={user} />
+            <Bookings mode={mode} user={user} />
           ) : (
             ""
           )}
