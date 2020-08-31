@@ -82,9 +82,9 @@ in order to successfully implement these patterns ..._
 
 ### Netlify Lambda
 
-- add dependencies, `npm install -D http-proxy-middleware netlify-lambda npm-run-all` (these allow
+- [ ] add dependencies, `npm install -D http-proxy-middleware netlify-lambda npm-run-all` (these allow
   testing using functions)
-- change the scripts in `package.json` (any other scripts, such as `format` or `clean`, can be left)
+- [ ] change the scripts in `package.json` (any other scripts, such as `format` or `clean`, can be left)
   to the following:
 
 ```
@@ -97,7 +97,7 @@ in order to successfully implement these patterns ..._
 "start:lambda": "netlify-lambda serve src/functions"
 ```
 
-- add a `netlify.toml` file in root:
+- [ ] add a `netlify.toml` file in root:
 
 ```
 [build]
@@ -106,7 +106,7 @@ in order to successfully implement these patterns ..._
   publish = "public"
 ```
 
-- proxy emulated functions for local development environment by editing `gatsby-config.js`:
+- [ ] proxy emulated functions for local development environment by editing `gatsby-config.js`:
 
 ```
 // at the top:
@@ -129,7 +129,10 @@ module.exports = {
   ...
 ```
 
-- add functions in a new `src/functions` folder
+- [ ] add functions in a new `src/functions` folder
+- [ ] add `\functions` to `.gitignore` (and `.env` / `.env.development` if not already present) -
+  the `netlify` functions will build out in the same way as `public`, and we don't want to commit
+  that to the repo
 
 ### Environment Variables & Netlify Functions (Development)
 

@@ -1,9 +1,9 @@
 {
-  "name": "gatsby-starter-default",
+  "name": "gatsby-auth-test",
   "private": true,
-  "description": "A simple starter to get up and developing quickly with Gatsby",
+  "description": "Trial using Netlify functions and JWT to serve user authentication",
   "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "author": "Dom Wakeling <domwakeling@gmail.com>",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "gatsby": "^2.24.47",
@@ -55,9 +55,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+    "url": "https://github.com/domwakeling/gatsby-auth-test"
   },
   "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "url": "https://github.com/domwakeling/gatsby-auth-test/issues"
   }
 }
